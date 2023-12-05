@@ -1,17 +1,31 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="x"         default="0.0" />
-    <arg name="y"         default="0.0" />
-    <arg name="z"         default="0.0" />
-    <arg name="rviz"      default="true" />
+    <arg name="use_rviz"  default="true" />
     <arg name="gui"       default="true"/>
     <arg name="pasued"    default="false"/>
-    <!-- <arg name="model"     default="$(find gonzo_description)/urdf/gonzo.xacro"/> -->
-    <arg name="worldname" default="dolly_city"/>
-    <arg name="worldfile" default="$(find gazebo_sim)/worlds/$(arg worldname).world"/>
+    <arg name="worldname" default="test-circuit"/>
+    <arg name="worldfile" value="$(find gazebo_sim)/worlds/$(arg worldname).world"/>
+
+    <!-- Panther arguments -->
+    <arg name="use_ros_control" default="false" />
+    <arg name="wheel_type" default="WH01" />
+    <arg name="use_gpu" default="false" />
+    <arg name="publish_robot_state" default="true" />
+    <arg name="pos_x" default="0.0" />
+    <arg name="pos_y" default="0.0" />
+    <arg name="pos_z" default="0.0" />
+    <arg name="rot_yaw" default="-1.57081" />
     
-    
-    <!-- <param name="robot_description" command="$(find xacro)/xacro $(arg model)"/>   -->
+    <include file="$(find panther_gazebo)/launch/panther_spawn.launch">
+        <arg name="use_ros_control" value="$(arg use_ros_control)" />
+        <arg name="wheel_type" value="$(arg wheel_type)" />
+        <arg name="use_gpu" value="$(arg use_gpu)" />
+        <arg name="publish_robot_state" value="$(arg publish_robot_state)" />
+        <arg name="pos_x" default="$(arg pos_x)" />
+        <arg name="pos_y" default="$(arg pos_y)" />
+        <arg name="pos_z" default="$(arg pos_z)" />
+        <arg name="rot_yaw" default="$(arg rot_yaw)" />
+    </include>
 
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="debug"        value="false" />
@@ -23,24 +37,12 @@
         <arg name="world_name"   value="$(arg worldfile)"/>
     </include>
 
-    <!--Launch Gazebo Simulator-->
-    <!-- <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" 
-    args="-urdf -param robot_description -model gonzo -x $(arg x) -y $(arg y) -z $(arg z)" 
-    output="screen"/> -->
-
-    <!-- <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
-    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
-
-    <rosparam file="$(find gonzo_description)/control/controller.yaml" command="load" />
-    <node name="controller_spawner" pkg="controller_manager" type="spawner"
-          respawn="false" output="screen" args="mobile_base_controller joint_state_controller" />
-
-    <group if="$(arg rviz)">
+    <!-- <group if="$(arg use_rviz)">
         <node name="rviz" pkg="rviz" type="rviz"
           args="-d $(find gonzo_gazebo)/rviz/visualization.rviz"/>
-    </group>
+    </group> -->
 
     <node pkg="tf" type="static_transform_publisher" name="static_world_to_odom_publisher" 
-    args="$(arg x) $(arg y)  $(arg z) 0 0 0 /world /odom 50"/> -->
+    args="$(arg pos_x) $(arg pos_y)  $(arg pos_z) 0 0 0 /world /odom 50"/> 
 
 </launch>
