@@ -3,7 +3,7 @@
     <arg name="use_rviz"  default="true" />
     <arg name="gui"       default="true"/>
     <arg name="pasued"    default="false"/>
-    <arg name="worldname" default="test-circuit"/>
+    <arg name="worldname" default="circuit"/>
     <arg name="worldfile" value="$(find gazebo_sim)/worlds/$(arg worldname).world"/>
 
     <!-- Panther arguments -->
@@ -13,7 +13,7 @@
     <arg name="publish_robot_state" default="true" />
     <arg name="pos_x" default="0.0" />
     <arg name="pos_y" default="0.0" />
-    <arg name="pos_z" default="0.0" />
+    <arg name="pos_z" default="0.05" />
     <arg name="rot_yaw" default="-1.57081" />
     
     <include file="$(find panther_gazebo)/launch/panther_spawn.launch">
