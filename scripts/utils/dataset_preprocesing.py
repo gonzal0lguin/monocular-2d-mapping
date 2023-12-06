@@ -56,6 +56,7 @@ def nearest_non_black_color(image, x, y):
 
 def flatten_colors_simple(image):
     # Split the image into color channels (B, G, R)
+    image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
     red, green, blue = cv.split(image)
 
     # Create masks based on color conditions
@@ -63,6 +64,7 @@ def flatten_colors_simple(image):
     blue_mask = (blue > 1.5 * red) & (blue > 1.5 * green)
     green_mask = (green > 1.5 * red) & (green > 1.5 * blue)
     magenta_mask = (red > 1.5 * green) & (blue > 1.5 * green) & (abs(red - blue) < 10)
+    cyan_mask = (green > 1.5 * red) & (blue > 1.5 * red) & (abs(green - blue) < 10)
     grey_mask = (abs(red - green) < 10) & (abs(red - blue) < 10) & (abs(green - blue) < 10)
 
     # Create an empty image
@@ -70,10 +72,11 @@ def flatten_colors_simple(image):
 
     # Assign colors to the segmented regions
     segmented_image[grey_mask] = [128, 128, 128]  # Grey
-    segmented_image[red_mask] = [255, 0, 0]  # Red
-    segmented_image[blue_mask] = [0, 0, 255]  # Blue
+    segmented_image[red_mask] = [0, 0, 255]  # Red
+    segmented_image[blue_mask] = [255, 0, 0]  # Blue
     segmented_image[green_mask] = [0, 255, 0]  # Green
     segmented_image[magenta_mask] = [255, 0, 255]  # Magenta
+    segmented_image[cyan_mask] = [255, 255, 0]  # Cyan
 
     black_pixels = np.all(segmented_image == [0, 0, 0], axis=-1)
     for i in range(segmented_image.shape[0]):
@@ -113,8 +116,8 @@ def flatten_colors_threshold(image):
 
 
 def test():
-    imgtest = cv.imread('images/image2.png')
-    imgtest = cv.cvtColor(imgtest, cv.COLOR_BGR2RGB)
+    imgtest = cv.imread('images/image7.png')
+    # imgtest = cv.cvtColor(imgtest, cv.COLOR_BGR2RGB)
 
     img_filt = flatten_colors_simple(imgtest)
 
@@ -130,7 +133,7 @@ def test():
 
 
 if __name__ == '__main__':
-
+    # test()
     parser = argparse.ArgumentParser(description="Image color flattener")
     parser.add_argument("-d", "--dir", type=str, default="images", help="Directory with target images")
     parser.add_argument("-o", "--out_dir", type=str, default="images_flattened", help="Directory of output images")
