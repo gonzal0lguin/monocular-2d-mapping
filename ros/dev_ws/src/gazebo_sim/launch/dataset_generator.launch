@@ -3,10 +3,12 @@
     <arg name="type"           default="rps"/> <!-- doc=['tr', 'rps']-->
     <arg name="world"          default="raw"/> <!-- doc=['raw', 'segmented']-->
     <arg name="poses_filename" default="poses"/>
+    <arg name="shuffle"        default="false"/>
     
     <param name="type"           value="$(arg type)"/>
     <param name="world"          value="$(arg world)"/>
     <param name="poses_filename" value="$(arg poses_filename)"/>
+    <param name="shuffle"        value="$(arg shuffle)"/>
     
     <node name="dataset_generator" pkg="gazebo_sim" type="image_gatherer.py"  output="screen" respawn="false">
     </node>

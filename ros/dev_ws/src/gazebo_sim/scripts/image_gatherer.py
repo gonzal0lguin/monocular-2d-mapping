@@ -15,12 +15,15 @@ import sys
 import os
 import numpy as np
 
+np.random.seed(9)
+
 class TrayectoryRecorder(object):
-    def __init__(self, poses_filename):
+    def __init__(self, poses_filename, shuffle_output=False):
         self.poses_saved = []
         self.save_state = False
         self.last_x, self.last_y, self.last_w = 0., 0., 0.
         self.poses_filename = poses_filename
+        self.shuffle = shuffle_output 
 
         self.sub = rospy.Subscriber('/ground_truth/state', Odometry, self.gt_callback)
         self.save_sub = rospy.Subscriber('/trayectory_recorder/save_state', Empty, self.write_poses_to_file)
@@ -31,7 +34,7 @@ class TrayectoryRecorder(object):
 
     def gt_callback(self, gt_msg):
         x, y, w = gt_msg.pose.pose.position.x, gt_msg.pose.pose.position.y, gt_msg.pose.pose.orientation.w
-        if abs(x - self.last_x) > 1e-1 or abs(y - self.last_y) > 1e-1 or abs(w - self.last_w) > 1e-1:
+        if abs(x - self.last_x) > 2e-1 or abs(y - self.last_y) > 2e-1 or abs(w - self.last_w) > 1e-1:
             msg = Pose(
                 position=gt_msg.pose.pose.position,
                 orientation=gt_msg.pose.pose.orientation
@@ -50,6 +53,8 @@ class TrayectoryRecorder(object):
             os.makedirs(os.path.join(path, 'trayectories'))
 
         arr = np.asarray(self.poses_saved)
+        if self.shuffle: np.random.shuffle(arr)
+
         np.save(os.path.join(path, f'trayectories/{self.poses_filename}.npy'), arr)
         
         rospy.loginfo(f'saved array with {len(arr)} poses.')
@@ -72,7 +77,7 @@ class RandomPoseSetter(object):
     
         if not os.path.exists(out_files_dir):
             os.makedirs(out_files_dir)
-
+        
         self.out_path = out_files_dir
         self.n_poses = n_poses if n_poses < len(self.poses) else len(self.poses)
         
@@ -117,35 +122,48 @@ class RandomPoseSetter(object):
         success = self.set_model_pose('panther', pose)
 
         if success:
-            print(f"Robot spawned at position: {pose.position.x}, {pose.position.y}")
+            rospy.loginfo(f"Robot spawned at position: {pose.position.x}, {pose.position.y}")
         else:
-            print("Failed to spawn the robot.")
+            rospy.logerr("Failed to spawn the robot.")
 
     def run_pose_setter(self):
-        for i in range(len(self.poses)):
+        curr_files = os.listdir(self.out_path)
+        indices = [int(file.split('_')[1].split('.')[0]) for file in curr_files if file.startswith('img_') and file.endswith('.png')]
+        if len(indices) != 0: index_offset = max(indices)
+        else: index_offset = 0
+
+        self.set_random_pose(0)
+        rospy.sleep(1) # give more time for the first pose
+
+        for i in range(1, len(self.poses)):
             self.set_random_pose(i)
             
-            rospy.sleep(.1)
+            rospy.sleep(.5) # delays to ensure same pictures are taken in both worlds
             
             img = rospy.wait_for_message('/camera/image_raw', Image)
-            self.save_image(img=img, filename=f"img_{i:05d}.png")
-            
-            rospy.sleep(.1)
+            self.save_image(img=img, filename=f"img_{i+index_offset:05d}.png")
+
+            rospy.sleep(.5)
+
 
 if __name__ == '__main__':
     rospy.init_node('path_replicator_node')
     type           = rospy.get_param("type")
     world          = rospy.get_param("world") # raw or segmented 
     poses_filename = rospy.get_param("poses_filename")
+    shuffle        = rospy.get_param("shuffle", False)
 
     print(type)
 
     if type == 'tr':
-        tr = TrayectoryRecorder(poses_filename=poses_filename)
+        tr = TrayectoryRecorder(poses_filename=poses_filename,
+                                shuffle_output=shuffle)
     
     else:
         print(os.path.join(os.getcwd(), f'images/images_{world}'))
-        rps = RandomPoseSetter(poses_file=poses_filename, out_files_dir=os.path.join(rospkg.RosPack().get_path('gazebo_sim'), f'images/images_{world}'))
+        rps = RandomPoseSetter(poses_file=poses_filename, 
+                               out_files_dir=os.path.join(rospkg.RosPack().get_path('gazebo_sim'), f'images/images_{world}'),
+                               )
         rps.run_pose_setter()
     
     rospy.spin()
