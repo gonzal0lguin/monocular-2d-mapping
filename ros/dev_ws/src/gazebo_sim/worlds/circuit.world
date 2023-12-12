@@ -18,6 +18,14 @@
         <falloff>0</falloff>
       </spot>
     </light>
+    <scene>
+      <grid>0</grid>
+      <sky>
+        <clouds>
+          <speed>1</speed>
+        </clouds>
+      </sky>
+    </scene>
     <model name='ground_plane'>
       <static>1</static>
       <link name='link'>
@@ -372,310 +380,6 @@
             <kinematic>0</kinematic>
           </link>
           <pose>-10.3919 -0.488996 -0.000588 0 -0 0</pose>
-        </model>
-        <model name='Oak tree'>
-          <static>1</static>
-          <link name='link'>
-            <collision name='collision'>
-              <geometry>
-                <mesh>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/meshes/oak_tree.dae</uri>
-                </mesh>
-              </geometry>
-              <max_contacts>10</max_contacts>
-              <surface>
-                <contact>
-                  <ode/>
-                </contact>
-                <bounce/>
-                <friction>
-                  <torsional>
-                    <ode/>
-                  </torsional>
-                  <ode/>
-                </friction>
-              </surface>
-            </collision>
-            <visual name='branch'>
-              <geometry>
-                <mesh>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/meshes/oak_tree.dae</uri>
-                  <submesh>
-                    <name>Branch</name>
-                  </submesh>
-                </mesh>
-              </geometry>
-              <material>
-                <double_sided>1</double_sided>
-                <diffuse>1 1 1 1</diffuse>
-                <script>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/scripts/</uri>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/textures/</uri>
-                  <name>OakTree/Branch</name>
-                </script>
-                <pbr>
-                  <metal>
-                    <albedo_map>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/textures/branch_diffuse.png</albedo_map>
-                  </metal>
-                </pbr>
-              </material>
-            </visual>
-            <visual name='bark'>
-              <geometry>
-                <mesh>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/meshes/oak_tree.dae</uri>
-                  <submesh>
-                    <name>Bark</name>
-                  </submesh>
-                </mesh>
-              </geometry>
-              <material>
-                <diffuse>1 1 1 1</diffuse>
-                <script>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/scripts/</uri>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/textures/</uri>
-                  <name>OakTree/Bark</name>
-                </script>
-                <pbr>
-                  <metal>
-                    <albedo_map>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/textures/bark_diffuse.png</albedo_map>
-                  </metal>
-                </pbr>
-              </material>
-            </visual>
-            <self_collide>0</self_collide>
-            <enable_wind>0</enable_wind>
-            <kinematic>0</kinematic>
-          </link>
-          <pose>-0.388364 -8.8551 -0.000588 0 -0 0</pose>
-        </model>
-        <model name='Oak tree_0'>
-          <static>1</static>
-          <link name='link'>
-            <collision name='collision'>
-              <geometry>
-                <mesh>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/meshes/oak_tree.dae</uri>
-                </mesh>
-              </geometry>
-              <max_contacts>10</max_contacts>
-              <surface>
-                <contact>
-                  <ode/>
-                </contact>
-                <bounce/>
-                <friction>
-                  <torsional>
-                    <ode/>
-                  </torsional>
-                  <ode/>
-                </friction>
-              </surface>
-            </collision>
-            <visual name='branch'>
-              <geometry>
-                <mesh>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/meshes/oak_tree.dae</uri>
-                  <submesh>
-                    <name>Branch</name>
-                  </submesh>
-                </mesh>
-              </geometry>
-              <material>
-                <double_sided>1</double_sided>
-                <diffuse>1 1 1 1</diffuse>
-                <script>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/scripts/</uri>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/textures/</uri>
-                  <name>OakTree/Branch</name>
-                </script>
-                <pbr>
-                  <metal>
-                    <albedo_map>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/textures/branch_diffuse.png</albedo_map>
-                  </metal>
-                </pbr>
-              </material>
-            </visual>
-            <visual name='bark'>
-              <geometry>
-                <mesh>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/meshes/oak_tree.dae</uri>
-                  <submesh>
-                    <name>Bark</name>
-                  </submesh>
-                </mesh>
-              </geometry>
-              <material>
-                <diffuse>1 1 1 1</diffuse>
-                <script>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/scripts/</uri>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/textures/</uri>
-                  <name>OakTree/Bark</name>
-                </script>
-                <pbr>
-                  <metal>
-                    <albedo_map>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/textures/bark_diffuse.png</albedo_map>
-                  </metal>
-                </pbr>
-              </material>
-            </visual>
-            <self_collide>0</self_collide>
-            <enable_wind>0</enable_wind>
-            <kinematic>0</kinematic>
-          </link>
-          <pose>13.6962 -15.5405 -0.000588 0 -0 0</pose>
-        </model>
-        <model name='Oak tree_0_clone'>
-          <static>1</static>
-          <link name='link'>
-            <collision name='collision'>
-              <geometry>
-                <mesh>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/meshes/oak_tree.dae</uri>
-                </mesh>
-              </geometry>
-              <max_contacts>10</max_contacts>
-              <surface>
-                <contact>
-                  <ode/>
-                </contact>
-                <bounce/>
-                <friction>
-                  <torsional>
-                    <ode/>
-                  </torsional>
-                  <ode/>
-                </friction>
-              </surface>
-            </collision>
-            <visual name='branch'>
-              <geometry>
-                <mesh>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/meshes/oak_tree.dae</uri>
-                  <submesh>
-                    <name>Branch</name>
-                  </submesh>
-                </mesh>
-              </geometry>
-              <material>
-                <double_sided>1</double_sided>
-                <diffuse>1 1 1 1</diffuse>
-                <script>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/scripts/</uri>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/textures/</uri>
-                  <name>OakTree/Branch</name>
-                </script>
-                <pbr>
-                  <metal>
-                    <albedo_map>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/textures/branch_diffuse.png</albedo_map>
-                  </metal>
-                </pbr>
-              </material>
-            </visual>
-            <visual name='bark'>
-              <geometry>
-                <mesh>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/meshes/oak_tree.dae</uri>
-                  <submesh>
-                    <name>Bark</name>
-                  </submesh>
-                </mesh>
-              </geometry>
-              <material>
-                <diffuse>1 1 1 1</diffuse>
-                <script>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/scripts/</uri>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/textures/</uri>
-                  <name>OakTree/Bark</name>
-                </script>
-                <pbr>
-                  <metal>
-                    <albedo_map>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/textures/bark_diffuse.png</albedo_map>
-                  </metal>
-                </pbr>
-              </material>
-            </visual>
-            <self_collide>0</self_collide>
-            <enable_wind>0</enable_wind>
-            <kinematic>0</kinematic>
-          </link>
-          <pose>-3.55363 22.3016 -0.000588 0 -0 0</pose>
-        </model>
-        <model name='Oak tree_0_clone_0'>
-          <static>1</static>
-          <link name='link'>
-            <collision name='collision'>
-              <geometry>
-                <mesh>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/meshes/oak_tree.dae</uri>
-                </mesh>
-              </geometry>
-              <max_contacts>10</max_contacts>
-              <surface>
-                <contact>
-                  <ode/>
-                </contact>
-                <bounce/>
-                <friction>
-                  <torsional>
-                    <ode/>
-                  </torsional>
-                  <ode/>
-                </friction>
-              </surface>
-            </collision>
-            <visual name='branch'>
-              <geometry>
-                <mesh>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/meshes/oak_tree.dae</uri>
-                  <submesh>
-                    <name>Branch</name>
-                  </submesh>
-                </mesh>
-              </geometry>
-              <material>
-                <double_sided>1</double_sided>
-                <diffuse>1 1 1 1</diffuse>
-                <script>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/scripts/</uri>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/textures/</uri>
-                  <name>OakTree/Branch</name>
-                </script>
-                <pbr>
-                  <metal>
-                    <albedo_map>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/textures/branch_diffuse.png</albedo_map>
-                  </metal>
-                </pbr>
-              </material>
-            </visual>
-            <visual name='bark'>
-              <geometry>
-                <mesh>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/meshes/oak_tree.dae</uri>
-                  <submesh>
-                    <name>Bark</name>
-                  </submesh>
-                </mesh>
-              </geometry>
-              <material>
-                <diffuse>1 1 1 1</diffuse>
-                <script>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/scripts/</uri>
-                  <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/textures/</uri>
-                  <name>OakTree/Bark</name>
-                </script>
-                <pbr>
-                  <metal>
-                    <albedo_map>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/oak tree/7/files/materials/textures/bark_diffuse.png</albedo_map>
-                  </metal>
-                </pbr>
-              </material>
-            </visual>
-            <self_collide>0</self_collide>
-            <enable_wind>0</enable_wind>
-            <kinematic>0</kinematic>
-          </link>
-          <pose>-15.2097 -2.9603 -0.000588 0 -0 0</pose>
         </model>
         <model name='Stop Sign'>
           <static>1</static>
@@ -7215,7 +6919,7 @@
           </link>
           <pose>-7.05572 -21.0348 -0.000588 0 -0 0</pose>
         </model>
-        <model name='pine_tree_1'>
+        <!-- <model name='pine_tree_1'>
           <static>1</static>
           <link name='link'>
             <collision name='collision'>
@@ -7277,7 +6981,7 @@
             <kinematic>0</kinematic>
           </link>
           <pose>3.46146 2.32161 -0.000588 0 -0 0</pose>
-        </model>
+        </model> -->
         <model name='pine_tree_2'>
           <static>1</static>
           <link name='link'>
