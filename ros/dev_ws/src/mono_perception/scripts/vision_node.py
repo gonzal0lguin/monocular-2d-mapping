@@ -11,6 +11,8 @@ import numpy as np
 from PIL import Image as PILimg
 from utils.bev import BEV
 
+import matplotlib.pyplot as plt
+
 def preprocess(pil_img, scale):
         w, h = pil_img.size
         newW, newH = int(scale * w), int(scale * h)
@@ -96,8 +98,9 @@ class VisionNode(object):
             segmented_image_msg = self.bridge.cv2_to_imgmsg(segmented_image.astype(np.uint8), encoding="mono8")
             segmented_image_rgb_msg = self.bridge.cv2_to_imgmsg(self.map_classes(segmented_image), encoding="rgb8")
             
+            segmented_image += 1
+            bev_image = cv2.resize(segmented_image.astype(np.uint8), (640, 480), interpolation=cv2.INTER_AREA)
 
-            bev_image = cv2.resize(segmented_image.astype(np.uint8), (480, 480), interpolation=cv2.INTER_AREA)
             bev_image = self._bev_transformer.apply_bev(bev_image)
             # bev_image = bev_image * int(255 / np.max(bev_image))
             bev_image_msg = self.bridge.cv2_to_imgmsg(bev_image, encoding="mono8")

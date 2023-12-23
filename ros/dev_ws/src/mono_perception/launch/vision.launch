@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node name="vision_node" pkg="mono_perception" type="vision_node.py" output="screen"/>
+    <node name="occupancy_grid" pkg="mono_perception" type="occupancy_grid.py" output="screen"/>
+
+</launch>
