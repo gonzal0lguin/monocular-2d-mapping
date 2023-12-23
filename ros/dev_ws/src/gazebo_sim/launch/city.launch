@@ -37,12 +37,12 @@
         <arg name="world_name"   value="$(arg worldfile)"/>
     </include>
 
-    <!-- <group if="$(arg use_rviz)">
+    <group if="$(arg use_rviz)">
         <node name="rviz" pkg="rviz" type="rviz"
-          args="-d $(find gonzo_gazebo)/rviz/visualization.rviz"/>
-    </group> -->
+          args="-d $(find gazebo_sim)/rviz/mapping.rviz"/>
+    </group>
 
-    <node pkg="tf" type="static_transform_publisher" name="static_world_to_odom_publisher" 
-    args="$(arg pos_x) $(arg pos_y)  $(arg pos_z) 0 0 0 /world /odom 50"/> 
+    <!-- <node pkg="tf" type="static_transform_publisher" name="static_world_to_odom_publisher" 
+    args="$(arg pos_x) $(arg pos_y)  $(arg pos_z) 0 0 0 /world /odom 50"/>  -->
 
 </launch>
