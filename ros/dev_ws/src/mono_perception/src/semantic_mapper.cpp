@@ -1,6 +1,7 @@
 #include "ros/ros.h"
 #include "nav_msgs/OccupancyGrid.h"
 #include "nav_msgs/Odometry.h"
+#include "sensor_msgs/Image.h"
 #include "geometry_msgs/TransformStamped.h"
 #include "tf2_ros/transform_broadcaster.h"
 #include "tf2/LinearMath/Quaternion.h"
@@ -8,6 +9,7 @@
 #include <tf2/LinearMath/Matrix3x3.h>
 #include <tf2/LinearMath/Transform.h>
 #include <ros/exception.h>
+#include <opencv2/opencv.hpp>
 
 /*
 TODO: 
@@ -25,7 +27,7 @@ public:
     SemanticMapper() : nh("~")
     {
         odom_sub = nh.subscribe("/odom", 10, &SemanticMapper::odomCallback, this);
-        bev_rgb_sub = nh.subscribe("/local_occ_grid", 10, &SemanticMapper::bev_cb, this);
+        bev_rgb_sub = nh.subscribe("/bev_image/gray", 10, &SemanticMapper::bev_cb, this);
         semantic_map_pub = nh.advertise<nav_msgs::OccupancyGrid>("/global_occ_grid", 10);
 
         // Initialize global occupancy grid parameters
@@ -59,15 +61,47 @@ public:
         robot_pose[2] = yaw;
     }
 
-    void bev_cb(const nav_msgs::OccupancyGrid::ConstPtr &local_occ_grid_msg)
+    cv::Mat rotateAndFlipImage(const cv::Mat &input_image)
+    {
+        // Rotate the image 90 degrees clockwise
+        cv::Mat rotated_image;
+        cv::transpose(input_image, rotated_image);
+        cv::flip(rotated_image, rotated_image, 1); // 1 indicates horizontal flip
+
+        return rotated_image;
+    }
+
+    std::vector<int8_t> imageMsgToVector(const sensor_msgs::Image::ConstPtr &image_msg)
+    {
+        // Assuming the image encoding is "8UC1" (grayscale)
+        if (image_msg->encoding != "mono8")
+        {
+            // Handle other encodings if needed
+            // For example, "8UC3" for RGB images
+            ROS_ERROR("Unsupported image encoding");
+            return std::vector<int8_t>();
+        }
+
+        // Convert sensor_msgs::Image data to std::vector<int8_t>
+        const uint8_t *image_data_ptr = image_msg->data.data();
+        const size_t image_size = image_msg->data.size();
+
+        std::vector<int8_t> image_vector(image_data_ptr, image_data_ptr + image_size);
+
+        return image_vector;
+    }
+
+    // void bev_cb(const nav_msgs::OccupancyGrid::ConstPtr &local_occ_grid_msg)
+    void bev_cb(const sensor_msgs::Image::ConstPtr &image_bev)
     {
         // Transform local occupancy grid to global coordinates
         if (checkForUpdate())
         {
-            auto local_occ_grid = local_occ_grid_msg->data;
+            auto img_vec = imageMsgToVector(image_bev);
+            auto sensor_data = flipHorizontal(img_vec, image_bev->width);
             auto global_position = worldToMapIndices(0);
 
-            updateMap(global_occ_grid, local_occ_grid, global_position, robot_pose[2]);
+            updateMap(global_occ_grid, sensor_data, global_position, robot_pose[2]);
     
             // Publish the updated global occupancy grid
             last_robot_pose = robot_pose;
@@ -95,6 +129,22 @@ public:
         return rotated_input;
     }
 
+    std::vector<int8_t> flipHorizontal(const std::vector<int8_t> &input_data, int image_width)
+    {
+        std::vector<int8_t> flipped_data = input_data;
+
+        for (int row = 0; row < input_data.size() / image_width; ++row)
+        {
+            int start_index = row * image_width;
+            int end_index = start_index + image_width - 1;
+
+            // Reverse the values in each row
+            std::reverse(flipped_data.begin() + start_index, flipped_data.begin() + end_index + 1);
+        }
+
+        return flipped_data;
+    }
+
     void updateMap(std::vector<int8_t> &map, const std::vector<int8_t> &sensor_data, const std::vector<int> &position, double yaw)
     {
         int Ll = static_cast<int>(sqrt(sensor_data.size()));
@@ -108,13 +158,13 @@ public:
 
         yawR *= -1;
 
-        auto rotated_sensor_data = rot90(sensor_data, Ll, Hl);
-
+        // auto rotated_sensor_data = rot90(sensor_data, Ll, Hl);
+        
         for (int x_ = 0; x_ < Ll; ++x_)
         {
             for (int y_ = 0; y_ < Hl; ++y_)
             {
-                if (rotated_sensor_data[y_ * Hl + x_] == -1)
+                if (sensor_data[y_ * Hl + x_] == 0)
                     continue;
 
                 double R = sqrt(pow(Hl - y_ + dy, 2) + pow(x_ - dx, 2));
@@ -126,17 +176,17 @@ public:
                 int i = xR + rx;
                 int j = yR - ry;
 
-                if (rotated_sensor_data[y_ * Hl + x_] == 0)
-                {
-                    map[j * map_size + i] = 0;
-                }
-                else
-                {
-                    map[j * map_size + i] += static_cast<int>(rotated_sensor_data[y_ * Hl + x_]);
-                }
+                // if (sensor_data[y_ * Hl + x_] == 0)
+                // {
+                //     map[j * map_size + i] = 0;
+                // }
+                // else
+                // {
+                map[j * map_size + i] = static_cast<int>(sensor_data[y_ * Hl + x_] * 20);
+                // }
 
                 // clamp values to range 0, 100 (at this point we ignored unkown space "-1")
-                map[j * map_size + i] = std::max(std::min(std::abs(map[j * map_size + i]), 100), 0);
+                map[j * map_size + i] = std::max(std::min(std::abs(map[j * map_size + i]), 127), 0);
             }
         }
     }
