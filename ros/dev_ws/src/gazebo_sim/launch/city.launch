@@ -42,7 +42,7 @@
           args="-d $(find gazebo_sim)/rviz/mapping.rviz"/>
     </group>
 
-    <!-- <node pkg="tf" type="static_transform_publisher" name="static_world_to_odom_publisher" 
-    args="$(arg pos_x) $(arg pos_y)  $(arg pos_z) 0 0 0 /world /odom 50"/>  -->
-
+    <!-- Vision nodes -->
+    <include file="$(find mono_perception)/launch/vision.launch"/>
+    
 </launch>
