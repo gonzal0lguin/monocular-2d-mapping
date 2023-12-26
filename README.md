@@ -10,18 +10,20 @@ The idea is to create simple 2D occupancy grid maps & semantic maps using a mono
 git clone https://github.com/gonzal0lguin/monocular-2d-mapping.git
 ```
 
-2. Install ROS dependencies:
+2. Clone the official [Panther repository](https://github.com/husarion/panther_ros) and replace the [panther_macro.urdf.xacro](https://drive.google.com/file/d/1Eks7VcxrN7zXWwNEIxzkELbx-4fOxdhI/view?usp=sharing) file from the robot's description.
+
+3. Install ROS dependencies:
 ```bash
 cd ros/dev_ws
 sudo rosdep install --from-paths src --ignore-src -y -r
 ```
 
-3. Compile:
+4. Compile:
 ```bash
 catkin_make
 ```
 
-4. Download the [pre-trained model](https://drive.google.com/drive/folders/1kJZWIN_ODuzpFXtbhKbdCHdVQZ3izptV?usp=sharing) and add it to:
+5. Download the [pre-trained model](https://drive.google.com/drive/folders/1kJZWIN_ODuzpFXtbhKbdCHdVQZ3izptV?usp=sharing) and add it to:
 ```bash
 segmentation_models/models/UNet/checkpoints
 ```
