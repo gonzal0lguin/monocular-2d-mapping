@@ -32,7 +32,7 @@ public:
 
         // Initialize global occupancy grid parameters
         resolution = 1.0 / 80.0; // (meters per pixel)
-        map_size = static_cast<int>(80.0 / resolution); // map size (in pixels)
+        map_size = static_cast<int>(100.0 / resolution); // map size (in pixels)
         global_occ_grid = std::vector<int8_t>(map_size * map_size, -1);
 
         linear_update = 0.05;
@@ -176,16 +176,7 @@ public:
                 int i = xR + rx;
                 int j = yR - ry;
 
-                // if (sensor_data[y_ * Hl + x_] == 0)
-                // {
-                //     map[j * map_size + i] = 0;
-                // }
-                // else
-                // {
                 map[j * map_size + i] = static_cast<int>(sensor_data[y_ * Hl + x_] * 20);
-                // }
-
-                // clamp values to range 0, 100 (at this point we ignored unkown space "-1")
                 map[j * map_size + i] = std::max(std::min(std::abs(map[j * map_size + i]), 127), 0);
             }
         }
@@ -194,8 +185,8 @@ public:
     std::vector<int> worldToMapIndices(int origin)
     {
         // Convert world coordinates to map indices
-        int x_idx = static_cast<int>(robot_pose[0] / resolution);
-        int y_idx = static_cast<int>(robot_pose[1] / resolution);
+        int x_idx = static_cast<int>((robot_pose[0]-20) / resolution);
+        int y_idx = static_cast<int>((robot_pose[1]) / resolution);
 
         return {x_idx, y_idx};
     }
@@ -209,7 +200,7 @@ public:
         global_occ_grid_msg.info.resolution = resolution;
         global_occ_grid_msg.info.width = map_size;
         global_occ_grid_msg.info.height = map_size;
-        global_occ_grid_msg.info.origin.position.x = -map_size * resolution / 2.0;
+        global_occ_grid_msg.info.origin.position.x = -map_size * resolution / 2.0+20;
         global_occ_grid_msg.info.origin.position.y = -map_size * resolution / 2.0;
         global_occ_grid_msg.data = global_occ_grid;
 
@@ -226,7 +217,7 @@ public:
             // Header
             transform.header.stamp = ros::Time::now();
             transform.header.frame_id = "map";
-            transform.child_frame_id = "odom"; // Assuming "odom" and "map" frames are the same
+            transform.child_frame_id = "odom"; 
             transform.transform.rotation.w = 1.0;
 
             // Publish the static transform
@@ -272,7 +263,7 @@ private:
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "local_occ_grid_concatenator_node");
+    ros::init(argc, argv, "semantic_mapper_node");
 
     SemanticMapper local_occ_grid_concatenator;
 

@@ -10,6 +10,7 @@ import numpy as np
 import cv2 as cv
 import os
 
+# TODO: Prettify and use parameter server for stuff such as rfesolution and so on
 
 class BirdseyeToOccGrid:
     def __init__(self):
@@ -17,7 +18,7 @@ class BirdseyeToOccGrid:
         rospy.init_node('birdseye_to_occgrid', anonymous=True)
         
         self.bridge = CvBridge()
-        self.image_sub = rospy.Subscriber('/bev_image/gray', Image, self.image_callback)
+        self.bev_sub_gray = rospy.Subscriber('/bev_image/gray', Image, self.image_callback)
         self.occ_grid_pub = rospy.Publisher('/local_occ_grid', OccupancyGrid, queue_size=10)
 
         self.meter_per_pixel = 1. / 80 
@@ -50,23 +51,13 @@ class BirdseyeToOccGrid:
 
     def image_to_occ_grid(self, image):
 
-        # Convert image to binary mask (1 for drivable area, 0 for occupied)
+        # Convert image to binary mask (1 for drivable area, 0 for occupied, -1 for unknown)
+
         binary_mask = (image == 2).astype(np.uint8) + (image == 0).astype(np.uint8) 
         binary_mask = np.rot90(np.rot90(binary_mask.T))
         unkown_mask = np.rot90(np.rot90((image == 0).astype(np.uint8).T))
-        # Get image dimensions
-        height, width = binary_mask.shape
-
-        # Initialize occupancy grid
-        occ_grid = np.zeros((height, width), dtype=np.int8)
 
         return (100 * (np.ones_like(binary_mask) - binary_mask) * self.ponderator - unkown_mask).astype(np.int8) 
-
-    def image_to_robot_transform(self, px_i, px_j):
-        x = (self.HEIGHT - px_i) * self.meter_per_pixel
-        y = (px_j - self.WIDTH / 2)  * self.meter_per_pixel
-
-        return x, y
 
 
 if __name__ == '__main__':

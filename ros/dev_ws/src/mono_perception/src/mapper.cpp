@@ -144,8 +144,8 @@ public:
     std::vector<int> worldToMapIndices(int origin)
     {
         // Convert world coordinates to map indices
-        int x_idx = static_cast<int>(robot_pose[0] / resolution);
-        int y_idx = static_cast<int>(robot_pose[1] / resolution);
+        int x_idx = static_cast<int>((robot_pose[0] - 20) / resolution);
+        int y_idx = static_cast<int>((robot_pose[1] - 10) / resolution);
 
         return {x_idx, y_idx};
     }
@@ -159,8 +159,8 @@ public:
         global_occ_grid_msg.info.resolution = resolution;
         global_occ_grid_msg.info.width = map_size;
         global_occ_grid_msg.info.height = map_size;
-        global_occ_grid_msg.info.origin.position.x = -map_size * resolution / 2.0;
-        global_occ_grid_msg.info.origin.position.y = -map_size * resolution / 2.0;
+        global_occ_grid_msg.info.origin.position.x = -map_size * resolution / 2.0+20;
+        global_occ_grid_msg.info.origin.position.y = -map_size * resolution / 2.0+10;
         global_occ_grid_msg.data = global_occ_grid;
 
         semantic_map_pub.publish(global_occ_grid_msg);
@@ -176,7 +176,7 @@ public:
             // Header
             transform.header.stamp = ros::Time::now();
             transform.header.frame_id = "map";
-            transform.child_frame_id = "odom"; // Assuming "odom" and "map" frames are the same
+            transform.child_frame_id = "odom";
             transform.transform.rotation.w = 1.0;
 
             // Publish the static transform

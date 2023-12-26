@@ -1,0 +1,26 @@
+  <launch>
+    <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping">
+      
+      <rosparam>
+        maxUrange: 3.8
+        base_frame: base_link
+        map_update_interval: 0.15
+        minimumScore: 650     <!-- poner mas de 600 que tan bueno es el escaneo laser-->
+        linearUpdate: 0.05
+        angularUpdate: 0.218
+        temporalUpdate: 0.1
+        xmin: -40
+        ymin: -40
+        xmax: 40
+        ymax: 20
+        maxRange: 15
+        particles: 200
+        iterations: 10
+        srr: 0.01
+        srt: 0.02
+        str: 0.01
+        stt: 0.02
+        delta: 0.1
+      </rosparam>
+    </node>
+  </launch>
